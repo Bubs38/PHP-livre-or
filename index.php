@@ -21,6 +21,7 @@ if (isset($_POST['username'], $_POST['message'])) {
   }
 }
 
+$messages = $guestbook->getMessages();
 
 $title = "Livre d'or";
 require 'elements/header.php';
@@ -62,6 +63,17 @@ require 'elements/header.php';
 
     <button type="submit" class="btn btn-primary">Envoyer</button>
   </form>
+
+  <?php if (!empty($messages)): ?>
+  <h1 class="mt-4">Vos messages</h1>
+
+  <?php foreach ($messages as $message): ?>
+    <?= $message->toHTML() ?>
+  <?php endforeach ?>
+
+
+  <?php endif ?>
+    
 </div>
 
 

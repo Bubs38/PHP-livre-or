@@ -8,6 +8,12 @@ class Message {
   private $date;
 
 
+  public static function fromJSON(string $json): Message
+  {
+    $data = json_decode($json, true);
+      return new self($data['username'], $data['message'], new DateTime("@" . $data['date']));
+  }
+
   public function __construct(string $username, string $message, ?DateTime $date = null)
   {
     $this->username = $username;
@@ -32,6 +38,20 @@ class Message {
       $errors['message'] = 'Votre message est trop court';
     }
     return $errors;
+  }
+
+  public function toHTML(): string
+  {
+    $username = htmlentities($this->username);
+    $message = nl2br(htmlentities($this->message));
+    $this->date->setTimezone(new DateTimeZone('Europe/Paris'));
+    $date = $this->date->format('d/m:Y à H:i');
+    return <<<HTML
+    <p>
+      <strong>{$username}</strong> <em>{$date}</em><br>
+      {$message}
+    </p>
+    HTML;
   }
 
   public function toJSON(): string 
